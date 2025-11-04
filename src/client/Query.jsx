@@ -6,12 +6,13 @@ import styles from './Query.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import 'ace-builds/src-noconflict/mode-sql'
 import 'ace-builds/src-noconflict/theme-sqlserver'
+import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/keybinding-vscode'
 import 'ace-builds/src-noconflict/ext-beautify'
 import 'ace-builds/src-noconflict/ext-emmet'
 import { ConnectionType, QueryJob } from 'dekart-proto/dekart_pb'
-import { SendOutlined, CheckCircleTwoTone, ExclamationCircleTwoTone, ClockCircleTwoTone } from '@ant-design/icons'
+import { SendOutlined, CheckCircleTwoTone, ExclamationCircleTwoTone, ClockCircleTwoTone, BulbOutlined, BulbFilled } from '@ant-design/icons'
 import { Duration } from 'luxon'
 import DataDocumentationLink from './DataDocumentationLink'
 import { cancelJob, queryChanged, runQuery } from './actions/query'
@@ -67,6 +68,10 @@ function QueryEditor ({ queryId, queryText, onChange, canWrite }) {
   const connection = useSelector(state => state.connection.list.find(c => c.id === dataset?.connectionId))
   const connectionType = useConnectionType(connection?.id)
   const completer = getDatasourceMeta(connectionType)?.completer
+  const [editorTheme, setEditorTheme] = useState(() => {
+    return localStorage.getItem('editorTheme') || 'sqlserver'
+  })
+
   useEffect(() => {
     if (completer) {
       const langTools = window.ace.require('ace/ext/language_tools')
@@ -74,15 +79,34 @@ function QueryEditor ({ queryId, queryText, onChange, canWrite }) {
     }
   }, [completer])
 
+  const toggleTheme = () => {
+    const newTheme = editorTheme === 'sqlserver' ? 'monokai' : 'sqlserver'
+    setEditorTheme(newTheme)
+    localStorage.setItem('editorTheme', newTheme)
+  }
+
+  const isDarkTheme = editorTheme === 'monokai'
+
   return (
-    <div className={styles.editor}>
+    <div className={`${styles.editor} ${isDarkTheme ? styles.darkTheme : styles.lightTheme}`}>
+      <div className={styles.themeToggle}>
+        <Tooltip title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}>
+          <Button
+            type='text'
+            size='small'
+            icon={isDarkTheme ? <BulbFilled /> : <BulbOutlined />}
+            onClick={toggleTheme}
+            className={styles.themeButton}
+          />
+        </Tooltip>
+      </div>
       <AutoSizer>
         {({ height, width }) => (
           <AceEditor
             mode='sql'
             width={`${width}px`}
             height={`${height}px`}
-            theme='sqlserver'
+            theme={editorTheme}
             name={'AceEditor' + queryId}
             keyboardHandler='vscode'
             onChange={onChange}

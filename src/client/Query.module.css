@@ -7,16 +7,45 @@
 
 .editor {
     flex: 1;
+    position: relative;
 }
 
-.editor :global .ace_content,
-.editor :global .ace_gutter {
-    /* background-color: #F7F7F7!important; */
+.themeToggle {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    z-index: 10;
+}
+
+.themeButton {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.themeButton:hover {
+    opacity: 1;
+}
+
+.lightTheme :global .ace_content,
+.lightTheme :global .ace_gutter {
     background-color: white !important;
 }
 
-.editor :global .ace_gutter-active-line.ace_gutter-cell {
+.lightTheme :global .ace_gutter-active-line.ace_gutter-cell {
     background-color: #EDEDED !important;
+}
+
+.darkTheme :global .ace_content,
+.darkTheme :global .ace_gutter {
+    background-color: #272822 !important;
+}
+
+.darkTheme :global .ace_gutter-active-line.ace_gutter-cell {
+    background-color: #3E3D32 !important;
+}
+
+.darkTheme .themeButton {
+    color: #F8F8F2;
 }
 
 .status {
