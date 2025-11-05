@@ -181,23 +181,23 @@ func configureJobStore(bucket storage.Storage) job.Store {
 	var jobStore job.Store
 	switch os.Getenv("DEKART_DATASOURCE") {
 	case "USER":
-		log.Info().Msg("Using USER defined job store backend")
-		jobStore = userjob.NewStore()
+		log.Info().Msg("Using USER defined job store backend (V2 refactored)")
+		jobStore = userjob.NewStoreV2()
 	case "SNOWFLAKE":
-		log.Info().Msg("Using Snowflake Datasource backend")
-		jobStore = snowflakejob.NewStore()
+		log.Info().Msg("Using Snowflake Datasource backend (V2 refactored)")
+		jobStore = snowflakejob.NewStoreV2()
 	case "ATHENA":
-		log.Info().Msg("Using Athena Datasource backend")
-		jobStore = athenajob.NewStore(bucket)
+		log.Info().Msg("Using Athena Datasource backend (V2 refactored)")
+		jobStore = athenajob.NewStoreV2(bucket)
 	case "PG":
-		log.Info().Msg("Using Postgres LIKE Datasource backend")
-		jobStore = pgjob.NewStore()
+		log.Info().Msg("Using Postgres LIKE Datasource backend (V2 refactored)")
+		jobStore = pgjob.NewStoreV2()
 	case "BQ", "":
-		log.Info().Msg("Using BigQuery Datasource backend")
-		jobStore = bqjob.NewStore()
+		log.Info().Msg("Using BigQuery Datasource backend (V2 refactored)")
+		jobStore = bqjob.NewStoreV2()
 	case "CH":
-		log.Info().Msg("Using Clickhouse Datasource backend")
-		jobStore = chjob.NewStore()
+		log.Info().Msg("Using Clickhouse Datasource backend (V2 refactored)")
+		jobStore = chjob.NewStoreV2()
 	default:
 		log.Fatal().Str("DEKART_STORAGE", os.Getenv("DEKART_STORAGE")).Msg("Unknown storage backend")
 	}
