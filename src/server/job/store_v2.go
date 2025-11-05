@@ -100,3 +100,8 @@ func (s *BaseStore) Create(reportID string, queryID string, queryText string, us
 func (s *BaseStore) Cancel(jobID string) bool {
 	return s.CancelJob(jobID)
 }
+
+// Registry returns the underlying registry for advanced use cases.
+func (s *BaseStore) Registry() *Registry {
+	return s.registry
+}
